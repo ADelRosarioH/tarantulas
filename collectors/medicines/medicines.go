@@ -43,12 +43,12 @@ func Run() error {
 	doc.OnResponse(func(r *colly.Response) {
 		fmt.Println("Downloading", r.FileName())
 
-		tempFile, err := ioutil.TempFile(name, r.FileName())
-
+		tempFile, err := ioutil.TempFile(os.TempDir(), fmt.Sprintf("*_%s", r.FileName()))
 		if err != nil {
 			panic(err)
 		}
 
+		defer tempFile.Close()
 		defer os.Remove(tempFile.Name())
 
 		r.Save(tempFile.Name())

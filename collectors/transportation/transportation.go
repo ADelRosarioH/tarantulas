@@ -1,4 +1,4 @@
-package flowers
+package transportation
 
 import (
 	"encoding/json"
@@ -12,18 +12,23 @@ import (
 )
 
 type record struct {
-	Description string
-	Unit        string
-	Vendor      string
-	Price       string
-	Currency    string
-	PublishedAt string
-	UpdatedAt   string
+	Province       string
+	Town           string
+	Route          string
+	Company        string
+	PhoneNumber    string
+	Representative string
+	Stop           string
+	Line           string
+	Price          string
+	Currency       string
+	PublishedAt    string
+	UpdatedAt      string
 }
 
 func Run() error {
 
-	name := "flowers"
+	name := "transportationfees"
 	mongoURI := os.Getenv("mongoURI")
 
 	storage := &mongo.Storage{
@@ -37,10 +42,10 @@ func Run() error {
 		return err
 	}
 
-	root.OnHTML("body .container", func(e *colly.HTMLElement) {
+	root.OnHTML(".jumbotron", func(e *colly.HTMLElement) {
 		records := []record{}
 
-		publishedAt := e.ChildText("div.container div.impre p")
+		publishedAt := e.ChildText("div.container div.impre div#fecha")
 
 		e.ForEach("div#productos div.impre center table.table-striped tr", func(_ int, el *colly.HTMLElement) {
 			r := record{
@@ -48,10 +53,15 @@ func Run() error {
 				UpdatedAt:   time.Now().UTC().String(),
 			}
 
-			r.Vendor = el.ChildText("td:nth-child(1)")
-			r.Description = el.ChildText("td:nth-child(2)")
-			r.Unit = el.ChildText("td:nth-child(3)")
-			r.Price = el.ChildText("td:nth-child(4)")
+			r.Province = el.ChildText("td:nth-child(1)")
+			r.Town = el.ChildText("td:nth-child(2)")
+			r.Route = el.ChildText("td:nth-child(3)")
+			r.Company = el.ChildText("td:nth-child(4)")
+			r.PhoneNumber = el.ChildText("td:nth-child(5)")
+			r.Representative = el.ChildText("td:nth-child(6)")
+			r.Stop = el.ChildText("td:nth-child(7)")
+			r.Line = el.ChildText("td:nth-child(8)")
+			r.Price = el.ChildText("td:nth-child(9)")
 			r.Currency = "DOP"
 
 			records = append(records, r)
@@ -70,7 +80,7 @@ func Run() error {
 		encoder.Encode(records)
 	})
 
-	root.Visit("http://proconsumidor.gob.do/precios-de-flores.php")
+	root.Visit("https://proconsumidor.gob.do/precio-de-pasajes-autobus.php")
 
 	return nil
 }

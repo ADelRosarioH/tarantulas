@@ -3,7 +3,9 @@ package utils
 import (
 	"fmt"
 	"os"
+	"path"
 	"path/filepath"
+	"strconv"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/defaults"
@@ -11,10 +13,16 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
-func UploadToS3(bucket string, tempFile *os.File) error {
+func UploadToS3(collector string, tempFile *os.File) error {
 
 	cfg := defaults.Get().Config
-	cfg.S3ForcePathStyle = aws.Bool(true)
+
+	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
+
+	if debug {
+		cfg.DisableSSL = aws.Bool(true)
+		cfg.S3ForcePathStyle = aws.Bool(true)
+	}
 
 	if region, ok := os.LookupEnv("AWS_DEFAULT_REGION"); ok {
 		cfg.Region = &region
@@ -22,8 +30,9 @@ func UploadToS3(bucket string, tempFile *os.File) error {
 
 	if endpoint, ok := os.LookupEnv("AWS_DEFAULT_ENDPOINT"); ok {
 		cfg.Endpoint = &endpoint
-		cfg.DisableSSL = aws.Bool(true)
 	}
+
+	bucket := os.Getenv("AWS_DEFAULT_BUCKET")
 
 	// The session the S3 Uploader will use
 	sess := session.Must(session.NewSession(cfg))
@@ -31,7 +40,7 @@ func UploadToS3(bucket string, tempFile *os.File) error {
 	// Create an uploader with the session and default options
 	uploader := s3manager.NewUploader(sess)
 
-	key := filepath.Base(tempFile.Name())
+	key := path.Join(collector, filepath.Base(tempFile.Name()))
 
 	upParams := &s3manager.UploadInput{
 		Bucket: &bucket,

@@ -30,11 +30,11 @@ type record struct {
 func Run() error {
 
 	name := "transportationfees"
-	mongoURI := os.Getenv("mongoURI")
+	MONGO_URI := os.Getenv("MONGO_URI")
 
 	storage := &mongo.Storage{
 		Database: name,
-		URI:      mongoURI,
+		URI:      MONGO_URI,
 	}
 
 	root := colly.NewCollector(colly.AllowURLRevisit())
@@ -80,7 +80,9 @@ func Run() error {
 		encoder := json.NewEncoder(tempFile)
 		encoder.Encode(records)
 
-		utils.UploadToS3(name, tempFile)
+		if err := utils.UploadToS3(name, tempFile); err != nil {
+			panic(err)
+		}
 	})
 
 	root.Visit("https://proconsumidor.gob.do/precio-de-pasajes-autobus.php")

@@ -13,11 +13,11 @@ import (
 func Run() error {
 
 	name := "basicbaskets"
-	mongoURI := os.Getenv("mongoURI")
+	MONGO_URI := os.Getenv("MONGO_URI")
 
 	storage := &mongo.Storage{
 		Database: name,
-		URI:      mongoURI,
+		URI:      MONGO_URI,
 	}
 
 	root := colly.NewCollector(colly.AllowURLRevisit())
@@ -55,7 +55,10 @@ func Run() error {
 		defer os.Remove(tempFile.Name())
 
 		r.Save(tempFile.Name())
-		utils.UploadToS3(name, tempFile)
+
+		if err := utils.UploadToS3(name, tempFile); err != nil {
+			panic(err)
+		}
 	})
 
 	root.Visit("https://proconsumidor.gob.do/")

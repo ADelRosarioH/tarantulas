@@ -13,11 +13,11 @@ import (
 func Run() error {
 
 	name := "dairy"
-	MONGO_URI := os.Getenv("MONGO_URI")
+	AWS_DOCUMENTDB_URI := os.Getenv("AWS_DOCUMENTDB_URI")
 
 	storage := &mongo.Storage{
 		Database: name,
-		URI:      MONGO_URI,
+		URI:      AWS_DOCUMENTDB_URI,
 	}
 
 	root := colly.NewCollector(colly.AllowURLRevisit())

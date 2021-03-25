@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/adelrosarioh/tarantulas/utils"
 	"github.com/gocolly/colly"
 	"github.com/zolamk/colly-mongo-storage/colly/mongo"
 )
@@ -78,6 +79,8 @@ func Run() error {
 
 		encoder := json.NewEncoder(tempFile)
 		encoder.Encode(records)
+
+		utils.UploadToS3(name, tempFile)
 	})
 
 	root.Visit("https://proconsumidor.gob.do/precio-de-pasajes-autobus.php")

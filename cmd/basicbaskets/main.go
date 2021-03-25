@@ -1,7 +1,7 @@
 package main
 
 import (
-	basicbasket "github.com/adelrosarioh/tarantulas/collectors/basickbaskets"
+	basicbasket "github.com/adelrosarioh/tarantulas/collectors/basicbaskets"
 )
 
 func main() {

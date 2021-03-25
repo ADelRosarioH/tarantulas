@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/adelrosarioh/tarantulas/utils"
 	"github.com/gocolly/colly"
 	"github.com/zolamk/colly-mongo-storage/colly/mongo"
 )
@@ -52,6 +53,8 @@ func Run() error {
 		defer os.Remove(tempFile.Name())
 
 		r.Save(tempFile.Name())
+
+		utils.UploadToS3(name, tempFile)
 	})
 
 	root.Visit("https://proconsumidor.gob.do/")

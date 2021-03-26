@@ -28,3 +28,9 @@ jobs:
           workdir: ./cmd/tarantulas
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      -
+        name: Upload assets
+        uses: actions/upload-artifact@v2
+        with:
+          name: myapp
+          path: dist/*

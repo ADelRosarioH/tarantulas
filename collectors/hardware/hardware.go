@@ -7,18 +7,13 @@ import (
 
 	"github.com/adelrosarioh/tarantulas/utils"
 	"github.com/gocolly/colly"
-	"github.com/zolamk/colly-mongo-storage/colly/mongo"
 )
 
 func Run() error {
 
 	name := "hardware"
-	AWS_DOCUMENTDB_URI := os.Getenv("AWS_DOCUMENTDB_URI")
 
-	storage := &mongo.Storage{
-		Database: name,
-		URI:      AWS_DOCUMENTDB_URI,
-	}
+	storage := utils.Storage(name)
 
 	root := colly.NewCollector(colly.AllowURLRevisit())
 

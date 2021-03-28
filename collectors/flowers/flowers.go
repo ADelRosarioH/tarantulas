@@ -59,8 +59,8 @@ func Run() error {
 			panic(err)
 		}
 
-		defer tempFile.Close()
-		defer os.Remove(tempFile.Name())
+		// defer tempFile.Close()
+		// defer os.Remove(tempFile.Name())
 
 		encoder := json.NewEncoder(tempFile)
 

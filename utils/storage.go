@@ -9,7 +9,7 @@ import (
 func Storage(prefix string) *redisstorage.Storage {
 
 	endpoint := os.Getenv("REDIS_ENDPOINT")
-	password := os.Getenv("REDIS_ENDPOINT")
+	password := os.Getenv("REDIS_PASSWORD")
 
 	storage := &redisstorage.Storage{
 		Address:  endpoint,

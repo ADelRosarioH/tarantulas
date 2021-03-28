@@ -38,7 +38,7 @@ func Run() error {
 		return err
 	}
 
-	root.OnHTML(".jumbotron", func(e *colly.HTMLElement) {
+	root.OnHTML("body", func(e *colly.HTMLElement) {
 		records := []record{}
 
 		publishedAt := e.ChildText("div.container div.impre div#fecha")
@@ -80,7 +80,7 @@ func Run() error {
 		}
 	})
 
-	root.Visit("https://proconsumidor.gob.do/precio-de-pasajes-autobus.php")
+	root.Visit("https://proconsumidor.gob.do/precios-pasajes/")
 
 	return nil
 }

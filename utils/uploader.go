@@ -1,69 +1,47 @@
 package utils
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path"
 	"path/filepath"
-	"strconv"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/defaults"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 func UploadToS3(collector string, tempFile *os.File) error {
 
-	cfg := defaults.Get().Config
-
-	debug, _ := strconv.ParseBool(os.Getenv("DEBUG"))
-
-	if debug {
-		cfg.DisableSSL = aws.Bool(true)
-		cfg.S3ForcePathStyle = aws.Bool(true)
-	}
-
-	if region, ok := os.LookupEnv("AWS_DEFAULT_REGION"); ok {
-		cfg.Region = &region
-	}
-
-	if endpoint, ok := os.LookupEnv("AWS_DEFAULT_ENDPOINT"); ok {
-		cfg.Endpoint = &endpoint
-	}
-
 	bucket := os.Getenv("AWS_DEFAULT_BUCKET")
-
-	// The session the S3 Uploader will use
-	var sess *session.Session
-
-	if debug {
-		sess = session.Must(session.NewSession(cfg))
-	} else {
-		sess = session.Must(session.NewSessionWithOptions(session.Options{
-			SharedConfigState: session.SharedConfigEnable,
-		}))
-	}
-
-	// Create an uploader with the session and default options
-	uploader := s3manager.NewUploader(sess)
-
 	key := path.Join(collector, filepath.Base(tempFile.Name()))
 
-	upParams := &s3manager.UploadInput{
-		Bucket: &bucket,
-		Key:    &key,
-		Body:   tempFile,
+	// Load the Shared AWS Configuration (~/.aws/config)
+	cfg, err := config.LoadDefaultConfig(context.TODO())
+
+	if err != nil {
+		return err
 	}
 
+	// Create an Amazon S3 service client
+	client := s3.NewFromConfig(cfg)
+
 	// Upload the file to S3.
-	result, err := uploader.Upload(upParams)
+	uploader := manager.NewUploader(client)
+
+	result, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(key),
+		Body:   tempFile,
+	})
 
 	if err != nil {
 		return fmt.Errorf("failed to upload file, %v", err)
 	}
 
-	fmt.Printf("file uploaded to, %s\n", result.Location)
+	fmt.Printf("file uploaded to %s", result.Location)
 
 	return nil
 }

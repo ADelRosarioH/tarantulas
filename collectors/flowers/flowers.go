@@ -65,6 +65,8 @@ func Run() error {
 		encoder := json.NewEncoder(tempFile)
 		encoder.Encode(records)
 
+		fmt.Printf("Starting %s upload to S3 bucket.\n", tempFile.Name())
+
 		if err := utils.UploadToS3(name, tempFile); err != nil {
 			panic(err)
 		}

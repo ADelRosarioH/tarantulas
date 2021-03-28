@@ -35,7 +35,15 @@ func UploadToS3(collector string, tempFile *os.File) error {
 	bucket := os.Getenv("AWS_DEFAULT_BUCKET")
 
 	// The session the S3 Uploader will use
-	sess := session.Must(session.NewSession(cfg))
+	var sess *session.Session
+
+	if debug {
+		sess = session.Must(session.NewSession(cfg))
+	} else {
+		sess = session.Must(session.NewSessionWithOptions(session.Options{
+			SharedConfigState: session.SharedConfigEnable,
+		}))
+	}
 
 	// Create an uploader with the session and default options
 	uploader := s3manager.NewUploader(sess)

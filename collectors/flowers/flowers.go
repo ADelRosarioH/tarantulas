@@ -36,7 +36,7 @@ func Run() error {
 	root.OnHTML("body", func(e *colly.HTMLElement) {
 		records := []record{}
 
-		publishedAt := e.ChildText("div.container div.impre p")
+		publishedAt := e.ChildText("div.container p")
 
 		e.ForEach("div#productos div.impre center table.table-striped tr", func(_ int, el *colly.HTMLElement) {
 			r := record{
@@ -63,6 +63,9 @@ func Run() error {
 		defer os.Remove(tempFile.Name())
 
 		encoder := json.NewEncoder(tempFile)
+
+		fmt.Printf("Encoding %v record(s).", len(records))
+
 		encoder.Encode(records)
 
 		fmt.Printf("Starting %s upload to S3 bucket.\n", tempFile.Name())

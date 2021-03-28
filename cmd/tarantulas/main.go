@@ -58,5 +58,5 @@ func main() {
 		panic(errors.New("collector not found"))
 	}
 
-	fmt.Printf("%s collector is done.", *collector)
+	fmt.Printf("%s collector is done.\n", *collector)
 }

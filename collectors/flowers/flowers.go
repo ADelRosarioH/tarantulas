@@ -64,7 +64,7 @@ func Run() error {
 
 		encoder := json.NewEncoder(tempFile)
 
-		fmt.Printf("Encoding %v record(s).", len(records))
+		fmt.Printf("Encoding %v record(s).\n", len(records))
 
 		encoder.Encode(records)
 

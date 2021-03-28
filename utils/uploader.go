@@ -31,17 +31,23 @@ func UploadToS3(collector string, tempFile *os.File) error {
 	// Upload the file to S3.
 	uploader := manager.NewUploader(client)
 
+	body, err := os.Open(tempFile.Name())
+
+	if err != nil {
+		return fmt.Errorf("failed to upload file, %v", err)
+	}
+
 	result, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(key),
-		Body:   tempFile,
+		Body:   body,
 	})
 
 	if err != nil {
 		return fmt.Errorf("failed to upload file, %v", err)
 	}
 
-	fmt.Printf("file uploaded to %s", result.Location)
+	fmt.Printf("file uploaded to %s\n", result.Location)
 
 	return nil
 }

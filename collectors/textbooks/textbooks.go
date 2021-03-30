@@ -25,7 +25,7 @@ func Run() error {
 	doc.AllowURLRevisit = false
 
 	root.OnHTML("section.content", func(e *colly.HTMLElement) {
-		e.ForEach(".entry .themeform .filetitle a[href]", func(_ int, el *colly.HTMLElement) {
+		e.ForEach(".entry.themeform .filetitle a[href]", func(_ int, el *colly.HTMLElement) {
 			doc.Visit(el.Attr("href"))
 		})
 	})

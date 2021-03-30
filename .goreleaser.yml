@@ -1,0 +1,8 @@
+builds:
+  - main: ./cmd/tarantulas/main.go
+    id: tarantulas
+    binary: tarantulas
+    goos:
+      - linux
+    goarch:
+      - amd64

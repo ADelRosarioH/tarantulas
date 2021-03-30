@@ -1,4 +1,4 @@
-name: goreleaser
+name: Build & Deploy
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - "*" # triggers only if push new tag version, like `0.8.4` or else
 
 jobs:
-  goreleaser:
+  Build:
     runs-on: ubuntu-latest
     steps:
       -
@@ -28,12 +28,17 @@ jobs:
           workdir: ./cmd/tarantulas
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
       - 
-        name: Upload S3
+        name: Upload Assets to AWS S3 Bucket
         uses: shallwefootball/upload-s3-action@v1.1.3
         with:
           aws_key_id: ${{ secrets.AWS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: ${{ secrets.AWS_BUCKET }}
-          source_dir: ' ./cmd/tarantulas/dist'
+          source_dir: './dist'
+          destination_dir: ''
 

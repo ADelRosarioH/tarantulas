@@ -22,9 +22,9 @@ func Run() error {
 	}
 
 	page := root.Clone()
-	page.AllowURLRevisit = false
 
 	doc := page.Clone()
+	doc.AllowURLRevisit = false
 
 	root.OnHTML("#menu-item-9868 ul li a[href]", func(e *colly.HTMLElement) {
 		fmt.Println("Root", e.Attr("href"))

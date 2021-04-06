@@ -5,4 +5,3 @@ RUN GOOS=linux GOARCH=amd64 go build -v
 
 FROM alpine:latest  
 COPY --from=build /usr/src/tarantulas/cmd/tarantulas/tarantulas  /usr/local/bin/tarantulas
-ENTRYPOINT [ "tarantulas" ]

@@ -17,3 +17,6 @@
 .env
 
 *.pem
+
+# Ignore functions builds
+functions/.aws-sam/*

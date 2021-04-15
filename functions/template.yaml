@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  tarantulas
+  
+  
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 15
+
+Resources:
+  ProConsumidorFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: pro-consumidor/
+      Handler: pro-consumidor
+      Runtime: go1.x
+      Tracing: Active # https://docs.aws.amazon.com/lambda/latest/dg/lambda-x-ray.html
+      Events:
+        AgriculturalCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name: agricultural-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"agricultural\" }"
+        BasicBasketsCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name:  basicbaskets-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"basicbaskets\" }"
+        DairyCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name:  dairy-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"dairy\" }"
+        FlowersCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name:  flowers-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"flowers\" }"
+        HardwareCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name:  hardware-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"hardware\" }"
+        MedicinesCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name:  medicines-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"medicines\" }"
+        TextbooksCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name:  textbooks-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"textbooks\" }"
+        TransportationCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name:  transportation-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"transportation\" }"
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+        Variables:
+          REDIS_ENDPOINT: "127.0.0.1:6379"
+          REDIS_PASSWORD: ""
+          AWS_DEFAULT_BUCKET: "tarantulas"
+
+Outputs:
+  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+  # Find out more about other implicit resources you can reference within SAM
+  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+  ProConsumidorFunction:
+    Description: "ProConsumidor.com function ARN"
+    Value: !GetAtt ProConsumidorFunction.Arn
+  ProConsumidorFunctionIamRole:
+    Description: "Implicit IAM Role created for Pro Consumidor function"
+    Value: !GetAtt ProConsumidorFunction.Arn

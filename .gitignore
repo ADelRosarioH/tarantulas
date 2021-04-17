@@ -19,4 +19,4 @@
 *.pem
 
 # Ignore functions builds
-functions/.aws-sam/*
+.aws-sam/*

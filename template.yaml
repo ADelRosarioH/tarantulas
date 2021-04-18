@@ -69,6 +69,7 @@ Resources:
             Input: "{ \"collector\": \"transportation\" }"
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
+          COLLY_IGNORE_ROBOTSTXT: "Y"
           REDIS_ENDPOINT: "127.0.0.1:6379"
           REDIS_PASSWORD: ""
           AWS_DEFAULT_BUCKET: "tarantulas"

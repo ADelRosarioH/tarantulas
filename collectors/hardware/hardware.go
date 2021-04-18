@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/adelrosarioh/tarantulas/utils"
 	"github.com/gocolly/colly"
+	"github.com/gocolly/colly/extensions"
 )
 
 func Run() error {
@@ -17,6 +19,12 @@ func Run() error {
 	storage := utils.Storage(name)
 
 	root := colly.NewCollector(colly.AllowURLRevisit())
+
+	root.WithTransport(&http.Transport{
+		DisableKeepAlives: true,
+	})
+
+	extensions.RandomUserAgent(root)
 
 	if err := root.SetStorage(storage); err != nil {
 		return err

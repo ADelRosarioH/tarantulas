@@ -3,6 +3,7 @@ package basicbaskets
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/adelrosarioh/tarantulas/utils"
@@ -50,12 +51,24 @@ func Run() error {
 
 		r.Save(tempFile.Name())
 
-		if err := utils.UploadToS3(name, tempFile); err != nil {
+		s3FileKey, err := utils.UploadToS3(name, tempFile)
+
+		if err != nil {
 			panic(err)
+		}
+
+		textMessage := fmt.Sprintf("%s collector uploaded %s to S3", name, s3FileKey)
+
+		if err := utils.Notify(textMessage); err != nil {
+			log.Fatal(err)
 		}
 	})
 
-	root.Visit("https://proconsumidor.gob.do/")
+	err := root.Visit("https://proconsumidor.gob.do/")
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	return nil
 }

@@ -72,6 +72,8 @@ Resources:
           REDIS_ENDPOINT: "127.0.0.1:6379"
           REDIS_PASSWORD: ""
           AWS_DEFAULT_BUCKET: "tarantulas"
+          SLACK_API_TOKEN: ""
+          SLACK_DEFAULT_CHANNEL: ""
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function

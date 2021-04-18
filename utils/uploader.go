@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
-func UploadToS3(collector string, tempFile *os.File) error {
+func UploadToS3(collector string, tempFile *os.File) (string, error) {
 
 	bucket := os.Getenv("AWS_DEFAULT_BUCKET")
 	key := path.Join(collector, filepath.Base(tempFile.Name()))
@@ -22,7 +22,7 @@ func UploadToS3(collector string, tempFile *os.File) error {
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// Create an Amazon S3 service client
@@ -34,7 +34,7 @@ func UploadToS3(collector string, tempFile *os.File) error {
 	body, err := os.Open(tempFile.Name())
 
 	if err != nil {
-		return fmt.Errorf("failed to upload file, %v", err)
+		return "", fmt.Errorf("failed to upload file, %v", err)
 	}
 
 	result, err := uploader.Upload(context.TODO(), &s3.PutObjectInput{
@@ -44,10 +44,10 @@ func UploadToS3(collector string, tempFile *os.File) error {
 	})
 
 	if err != nil {
-		return fmt.Errorf("failed to upload file, %v", err)
+		return "", fmt.Errorf("failed to upload file, %v", err)
 	}
 
 	fmt.Printf("file uploaded to %s\n", result.Location)
 
-	return nil
+	return key, nil
 }

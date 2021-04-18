@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"time"
 
@@ -80,12 +81,24 @@ func Run() error {
 
 		fmt.Printf("Starting %s upload to S3 bucket.\n", tempFile.Name())
 
-		if err := utils.UploadToS3(name, tempFile); err != nil {
+		s3FileKey, err := utils.UploadToS3(name, tempFile)
+
+		if err != nil {
 			panic(err)
+		}
+
+		textMessage := fmt.Sprintf("%s's collector found and uploaded %s to S3", name, s3FileKey)
+
+		if err := utils.Notify(textMessage); err != nil {
+			log.Fatal(err)
 		}
 	})
 
-	root.Visit("https://proconsumidor.gob.do/precios-pasajes/")
+	err := root.Visit("https://proconsumidor.gob.do/precios-pasajes/")
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	return nil
 }

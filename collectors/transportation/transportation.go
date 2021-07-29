@@ -95,7 +95,7 @@ func Run() error {
 			panic(err)
 		}
 
-		textMessage := fmt.Sprintf("%s's collector found and uploaded %s to S3", name, s3FileKey)
+		textMessage := fmt.Sprintf("%s collector found and uploaded %s to S3", name, s3FileKey)
 
 		if err := utils.Notify(textMessage); err != nil {
 			log.Fatal(err)

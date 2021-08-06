@@ -11,11 +11,11 @@ Globals:
     Timeout: 900
 
 Resources:
-  ProConsumidorFunction:
+  SpidersFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: functions/pro-consumidor/
-      Handler: pro-consumidor
+      CodeUri: functions/spiders/
+      Handler: spiders
       Runtime: go1.x
       Tracing: Active # https://docs.aws.amazon.com/lambda/latest/dg/lambda-x-ray.html
       Events:
@@ -67,6 +67,12 @@ Resources:
             Name:  transportation-collector-schedule
             Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
             Input: "{ \"collector\": \"transportation\" }"
+        SirenadoCollectorSchedule:
+          Type: Schedule # More info about Schedule Event Source: https://github.com/aws/serverless-application-model/blob/master/versions/2016-10-31.md#schedule
+          Properties:
+            Name:  sirenado-collector-schedule
+            Schedule: cron(0 0 * * ? *) # every day at 12:00 AM
+            Input: "{ \"collector\": \"sirenado\" }"
       Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
         Variables:
           COLLY_IGNORE_ROBOTSTXT: "Y"
@@ -80,9 +86,9 @@ Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
-  ProConsumidorFunction:
-    Description: "ProConsumidor.com function ARN"
-    Value: !GetAtt ProConsumidorFunction.Arn
-  ProConsumidorFunctionIamRole:
-    Description: "Implicit IAM Role created for Pro Consumidor function"
-    Value: !GetAtt ProConsumidorFunction.Arn
+  SpidersFunction:
+    Description: "Spiders function ARN"
+    Value: !GetAtt SpidersFunction.Arn
+  SpidersFunctionIamRole:
+    Description: "Implicit IAM Role created for Spiders function"
+    Value: !GetAtt SpidersFunction.Arn

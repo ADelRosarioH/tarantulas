@@ -13,6 +13,7 @@ import (
 	"github.com/adelrosarioh/tarantulas/collectors/flowers"
 	"github.com/adelrosarioh/tarantulas/collectors/hardware"
 	"github.com/adelrosarioh/tarantulas/collectors/medicines"
+	"github.com/adelrosarioh/tarantulas/collectors/sirenado"
 	"github.com/adelrosarioh/tarantulas/collectors/textbooks"
 	"github.com/adelrosarioh/tarantulas/collectors/transportation"
 )
@@ -56,6 +57,10 @@ func handler(ctx context.Context, event ScheduleEventInput) {
 		}
 	case "transportation":
 		if err := transportation.Run(); err != nil {
+			panic(err)
+		}
+	case "sirenado":
+		if err := sirenado.Run(); err != nil {
 			panic(err)
 		}
 	default:
